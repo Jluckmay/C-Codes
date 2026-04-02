@@ -12,7 +12,7 @@ A ideia central da biblioteca é reinventar a roda (no bom sentido acadêmico), 
 
 ### 🌐 Site do Projeto (Jogue Online)
 
-Explore a [página oficial do projeto no GitHub Pages](https://jluckmay.github.io/c-codes)! Nela, você pode:
+Explore a [página oficial do projeto no GitHub Pages](https://jluckmay.github.io/C-Codes/)! Nela, você pode:
 - Consultar a documentação completa das funções e bibliotecas.
 - **Jogar no navegador:** Os jogos (como o Jogo dos 21 Palitos) foram reescritos em JavaScript para que você possa testar a lógica da IA diretamente pela web, sem precisar compilar nada.
 - Baixar os arquivos do projeto.
@@ -102,7 +102,7 @@ The core idea of the library is to "reinvent the wheel" (in a good, academic way
 
 ### 🌐 Project Website (Play Online)
 
-Explore the [official project page on GitHub Pages](https://jluckmay.github.io/c-codes)! There, you can:
+Explore the [official project page on GitHub Pages](https://jluckmay.github.io/C-Codes/)! There, you can:
 - Check out the full documentation of functions and libraries.
 - **Play in your browser:** The games (like the 21 Sticks Game) have been rewritten in JavaScript so you can test the AI logic directly online, without needing to compile anything.
 - Download project files.
