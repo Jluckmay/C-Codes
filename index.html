@@ -57,7 +57,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .card { background-color: var(--bg-card); padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow-x: auto; }
-        .terminal-box { background-color: #1e1e1e; color: #4af626; padding: 15px; border-radius: 5px; font-family: Consolas, monospace; overflow-x: auto; border: 1px solid #333; }
+        .terminal-box { background-color: #1e1e1e; color: #4af626; padding: 15px; border-radius: 5px; font-family: Consolas, monospace; overflow-x: auto; border: 1px solid #333; margin-bottom: 10px; }
         body.light-theme .terminal-box { background-color: #282c34; color: #abb2bf; }
 
         /* ================= Tabelas de Documentação ================= */
@@ -69,6 +69,8 @@
 
         .download-btn { display: inline-block; background-color: var(--accent-color); color: #fff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-size: 1.2em; font-weight: bold; margin: 10px 0; transition: 0.3s; }
         .download-btn:hover { background-color: var(--accent-hover); }
+        .link-text { color: var(--accent-color); font-weight: bold; text-decoration: none; }
+        .link-text:hover { text-decoration: underline; }
 
         /* ================= UI dos Jogos e Morse ================= */
         .game-area { text-align: center; border: 2px dashed var(--border-color); padding: 20px; border-radius: 8px; margin-top: 15px; }
@@ -91,6 +93,21 @@
         .ms-c5 { color: #FF9800; } .ms-c6 { color: #00BCD4; } .ms-c7 { color: #000000; } .ms-c8 { color: #795548; }
         body.light-theme .ms-cell { background-color: #ddd; border-color: #eee; }
         body.light-theme .ms-cell.opened { background-color: #fff; border-color: #ccc; }
+        
+        ul.install-list { padding-left: 20px; }
+        ul.install-list li { margin-bottom: 15px; }
+
+        /* ================= Rodapé ================= */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--text-color);
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+        footer p { margin: 5px 0; font-size: 0.9em; }
+        footer .copyright { font-weight: bold; color: var(--accent-color); }
     </style>
 </head>
 <body class="lang-pt">
@@ -126,14 +143,68 @@
 
             <div class="card">
                 <h2><span class="pt">Instalação Nativa</span><span class="en">Native Installation</span></h2>
-                <p class="pt">Pode instalar o projeto nativamente no Linux, macOS ou Windows usando o nosso script de automação no seu terminal.</p>
-                <p class="en">You can install the project natively on Linux, macOS, or Windows using our automation script in your terminal.</p>
+                <p class="pt">Você pode instalar o projeto nativamente no seu sistema operacional para usufruir das bibliotecas globalmente e jogar os jogos pelo terminal.</p>
+                <p class="en">You can install the project natively on your operating system to use the libraries globally and play the games via terminal.</p>
+                
+                <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+                <h3><span class="pt">📋 Pré-requisitos</span><span class="en">📋 Prerequisites</span></h3>
+                <p class="pt">Para compilar e instalar o projeto, você precisa do compilador <b>GCC</b> e da ferramenta <b>Make</b> instalados:</p>
+                <p class="en">To compile and install the project, you need the <b>GCC</b> compiler and the <b>Make</b> tool installed:</p>
+                
+                <ul class="install-list">
+                    <li>
+                        <b>Linux (Ubuntu/Debian):</b>
+                        <div class="terminal-box" style="padding: 10px; margin-top: 5px;">sudo apt update && sudo apt install build-essential</div>
+                    </li>
+                    <li>
+                        <b>macOS:</b>
+                        <div class="terminal-box" style="padding: 10px; margin-top: 5px;">xcode-select --install</div>
+                    </li>
+                    <li>
+                        <b>Windows:</b><br>
+                        <span class="pt">Recomendamos instalar o GCC e o Make através do <a href="https://www.msys2.org/" target="_blank" class="link-text">MSYS2</a>. Siga as instruções do site para instalar o pacote <code>mingw-w64-gcc</code> e o <code>make</code>.</span>
+                        <span class="en">We recommend installing GCC and Make via <a href="https://www.msys2.org/" target="_blank" class="link-text">MSYS2</a>. Follow the site's instructions to install the <code>mingw-w64-gcc</code> and <code>make</code> packages.</span>
+                    </li>
+                </ul>
+
+                <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+                <h3><span class="pt">🛠️ Passo a Passo de Instalação</span><span class="en">🛠️ Installation Steps</span></h3>
+                
+                <p class="pt"><b>Passo 1:</b> Clone o repositório e compile os arquivos executando o Makefile na raiz do projeto.</p>
+                <p class="en"><b>Step 1:</b> Clone the repository and compile the files by running the Makefile in the project root.</p>
                 <div class="terminal-box">
                     git clone https://github.com/jluckmay/c-codes.git<br>
                     cd c-codes<br>
-                    chmod +x install.sh<br>
-                    ./install.sh
+                    make
                 </div>
+
+                <p class="pt"><b>Passo 2:</b> Execute o script de instalação correspondente ao seu sistema operacional:</p>
+                <p class="en"><b>Step 2:</b> Run the installation script corresponding to your operating system:</p>
+                
+                <ul class="install-list">
+                    <li>
+                        <b>Linux / macOS:</b>
+                        <div class="terminal-box" style="padding: 10px; margin-top: 5px;">chmod +x install.sh<br>./install.sh</div>
+                    </li>
+                    <li>
+                        <b>Windows:</b><br>
+                        <span class="pt">Dê um duplo clique no arquivo <code>install.bat</code> ou execute-o no Prompt de Comando:</span>
+                        <span class="en">Double-click the <code>install.bat</code> file or run it via the Command Prompt:</span>
+                        <div class="terminal-box" style="padding: 10px; margin-top: 5px;">install.bat</div>
+                    </li>
+                </ul>
+
+                <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+                <h3><span class="pt">💻 Uso Global</span><span class="en">💻 Global Usage</span></h3>
+                <p class="pt">Após a instalação, você pode compilar qualquer projeto pessoal usando o compilador padrão (inclua <code>#include &lt;more_f.h&gt;</code> no seu código):</p>
+                <p class="en">After installation, you can compile any personal project using the standard compiler (include <code>#include &lt;more_f.h&gt;</code> in your code):</p>
+                <div class="terminal-box" style="padding: 10px;">gcc meu_programa.c -o meu_programa</div>
+                <p class="pt" style="font-size: 0.9em; color: var(--accent-color);"><i>Obs para Windows: Lembre-se de adicionar a flag <code>-I C:\C-Codes\include</code> na compilação.</i></p>
+                <p class="en" style="font-size: 0.9em; color: var(--accent-color);"><i>Note for Windows: Remember to add the <code>-I C:\C-Codes\include</code> flag when compiling.</i></p>
+
             </div>
         </section>
 
@@ -489,6 +560,12 @@
             </div>
         </section>
     </main>
+
+    <footer>
+        <p class="copyright">&copy; 2026 João Lucas Mayrinck D'Oliveira</p>
+        <p><span class="pt">Todos os direitos reservados.</span><span class="en">All rights reserved.</span></p>
+        <p> Belo Horizonte, MG</p>
+    </footer>
 
     <script src="js/system_f.js"></script>
     <script src="js/math_f.js"></script>
