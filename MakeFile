@@ -1,0 +1,22 @@
+# Variáveis de Compilação
+CC = gcc
+CFLAGS = -Wall
+DEST_BIN = /usr/local/bin
+DEST_INC = /usr/local/include
+
+# Lista de Jogos/Programas
+GAMES = campominado 21palitos conversormorse
+
+all: $(GAMES)
+
+campominado: Jogos/CampoMinado.c
+	$(CC) $(CFLAGS) "$<" -o $@
+
+21palitos: Jogos/VintiumPalitusGame.c
+	$(CC) $(CFLAGS) "$<" -o $@
+
+conversormorse: Programas/ConversorDeCodigoMorse.c
+	$(CC) $(CFLAGS) "$<" -o $@
+
+clean:
+	rm -f $(GAMES)

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-Codes | João Lucas Mayrinck</title>
+    <style>
+        /* ================= Variáveis de Tema (Escuro Padrão) ================= */
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --accent-color: #bb86fc;
+            --accent-hover: #9b59b6;
+            --bg-card: #1e1e1e;
+            --btn-bg: #333333;
+            --btn-text: #ffffff;
+            --nav-bg: #2d2d2d;
+            --border-color: #444;
+        }
+
+        /* Variáveis para Tema Claro */
+        body.light-theme {
+            --bg-color: #f4f4f9;
+            --text-color: #2c3e50;
+            --accent-color: #6200ea;
+            --accent-hover: #4b00b3;
+            --bg-card: #ffffff;
+            --btn-bg: #dddddd;
+            --btn-text: #333333;
+            --nav-bg: #e0e0e0;
+            --border-color: #ccc;
+        }
+
+        /* ================= Estilos Globais ================= */
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; transition: 0.3s; }
+        body.lang-en .pt { display: none !important; }
+        body.lang-pt .en { display: none !important; }
+
+        header { background-color: var(--bg-card); padding: 20px; text-align: center; border-bottom: 3px solid var(--accent-color); }
+        header h1 { margin: 0 0 10px 0; font-size: 2.5em; }
+        header p { margin: 0 0 15px 0; color: var(--accent-color); font-weight: bold; }
+
+        .controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+        button { background-color: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color); padding: 10px 15px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: var(--accent-color); color: #fff; border-color: var(--accent-hover); }
+
+        /* ================= Navegação em Abas ================= */
+        nav { display: flex; justify-content: center; background-color: var(--nav-bg); border-bottom: 2px solid var(--border-color); flex-wrap: wrap; }
+        nav button { background: none; border: none; border-bottom: 3px solid transparent; border-radius: 0; padding: 15px 20px; font-size: 1.1em; }
+        nav button.active { border-bottom: 3px solid var(--accent-color); color: var(--accent-color); }
+        nav button:hover { background-color: rgba(0,0,0,0.1); color: var(--accent-color); }
+
+        /* ================= Conteúdo Principal ================= */
+        main { padding: 30px 20px; max-width: 1100px; margin: auto; }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background-color: var(--bg-card); padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow-x: auto; }
+        .terminal-box { background-color: #1e1e1e; color: #4af626; padding: 15px; border-radius: 5px; font-family: Consolas, monospace; overflow-x: auto; border: 1px solid #333; }
+        body.light-theme .terminal-box { background-color: #282c34; color: #abb2bf; }
+
+        /* ================= Tabelas de Documentação ================= */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 700px; }
+        th, td { border: 1px solid var(--border-color); padding: 12px; text-align: left; vertical-align: middle;}
+        th { background-color: var(--nav-bg); color: var(--accent-color); }
+        code { background-color: var(--btn-bg); padding: 2px 5px; border-radius: 4px; font-family: monospace; color: var(--accent-color); }
+        .module-header { background-color: var(--bg-color); font-weight: bold; text-align: center; color: var(--text-color); font-size: 1.1em; padding: 15px;}
+
+        .download-btn { display: inline-block; background-color: var(--accent-color); color: #fff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-size: 1.2em; font-weight: bold; margin: 10px 0; transition: 0.3s; }
+        .download-btn:hover { background-color: var(--accent-hover); }
+
+        /* ================= UI dos Jogos e Morse ================= */
+        .game-area { text-align: center; border: 2px dashed var(--border-color); padding: 20px; border-radius: 8px; margin-top: 15px; }
+        #sticks-display { font-size: 2em; letter-spacing: 5px; color: var(--accent-color); font-weight: bold; margin: 20px 0; }
+        .game-input { padding: 10px; font-size: 1em; width: 80px; border-radius: 4px; border: 1px solid var(--border-color); text-align: center; margin: 5px;}
+        
+        .morse-textarea { width: 100%; max-width: 100%; height: 100px; padding: 10px; font-size: 1.2em; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); margin-bottom: 15px; box-sizing: border-box; resize: vertical; }
+        .morse-actions { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+
+        /* CSS Campo Minado */
+        .ms-settings { margin-bottom: 15px; }
+        .ms-board { display: grid; gap: 2px; justify-content: center; margin: 20px auto; background-color: var(--border-color); padding: 4px; border-radius: 4px; max-width: fit-content; }
+        .ms-cell { width: 30px; height: 30px; background-color: var(--btn-bg); border: 2px outset #555; text-align: center; line-height: 26px; cursor: pointer; font-weight: bold; user-select: none; font-size: 16px;}
+        .ms-cell:active { border-style: inset; }
+        .ms-cell.opened { background-color: var(--bg-card); border: 1px solid var(--border-color); cursor: default; }
+        .ms-cell.bomb { background-color: #ff4444; color: white; border: 1px solid #aa0000; }
+        .ms-cell.flag { color: #ffaa00; font-size: 18px; }
+        
+        .ms-c1 { color: #2196F3; } .ms-c2 { color: #4CAF50; } .ms-c3 { color: #F44336; } .ms-c4 { color: #9C27B0; }
+        .ms-c5 { color: #FF9800; } .ms-c6 { color: #00BCD4; } .ms-c7 { color: #000000; } .ms-c8 { color: #795548; }
+        body.light-theme .ms-cell { background-color: #ddd; border-color: #eee; }
+        body.light-theme .ms-cell.opened { background-color: #fff; border-color: #ccc; }
+    </style>
+</head>
+<body class="lang-pt">
+
+    <header>
+        <h1>C-Codes</h1>
+        <p>
+            <span class="pt">Desenvolvido por João Lucas Mayrinck</span>
+            <span class="en">Developed by João Lucas Mayrinck</span>
+        </p>
+        
+        <div class="controls">
+            <button onclick="toggleTheme()" id="theme-btn">☀️ Light Mode</button>
+            <button onclick="toggleLang()" id="lang-btn">🇺🇸 English</button>
+        </div>
+
+        <nav>
+            <button class="tab-btn active" onclick="showTab('inicio')"><span class="pt">Início</span><span class="en">Home</span></button>
+            <button class="tab-btn" onclick="showTab('docs')"><span class="pt">Documentação</span><span class="en">Docs</span></button>
+            <button class="tab-btn" onclick="showTab('download')">Download</button>
+            <button class="tab-btn" onclick="showTab('jogar')"><span class="pt">Jogar Online</span><span class="en">Play Online</span></button>
+            <button class="tab-btn" onclick="showTab('morse')"><span class="pt">Conversor Morse</span><span class="en">Morse Converter</span></button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio" class="tab-content active">
+            <div class="card">
+                <h2><span class="pt">Sobre o Projeto</span><span class="en">About the Project</span></h2>
+                <p class="pt">Uma coleção de ferramentas e jogos desenvolvidos originalmente em C, focados em lógica pura e algoritmos manuais de alta precisão. A ideia central da biblioteca é "reinventar a roda" (no bom sentido acadêmico), implementando cálculos na "força bruta" e lógica matemática pura, em vez de depender de bibliotecas padrão como <code>&lt;math.h&gt;</code> e <code>&lt;string.h&gt;</code>.</p>
+                <p class="en">A collection of tools and games originally developed in C, focusing on pure logic and high-precision manual algorithms. The core idea is to "reinvent the wheel" (academically speaking), implementing calculations through "brute force" instead of relying on standard libraries like <code>&lt;math.h&gt;</code> and <code>&lt;string.h&gt;</code>.</p>
+            </div>
+
+            <div class="card">
+                <h2><span class="pt">Instalação Nativa</span><span class="en">Native Installation</span></h2>
+                <p class="pt">Pode instalar o projeto nativamente no Linux, macOS ou Windows usando o nosso script de automação no seu terminal.</p>
+                <p class="en">You can install the project natively on Linux, macOS, or Windows using our automation script in your terminal.</p>
+                <div class="terminal-box">
+                    git clone https://github.com/jluckmay/c-codes.git<br>
+                    cd c-codes<br>
+                    chmod +x install.sh<br>
+                    ./install.sh
+                </div>
+            </div>
+        </section>
+
+        <section id="docs" class="tab-content">
+            
+            <div class="card">
+                <h2><span class="pt">📚 Bibliotecas Nativas (C)</span><span class="en">📚 Native Libraries (C)</span></h2>
+                <p class="pt">Detalhamento de <b>todas</b> as funções presentes nos ficheiros <i>headers</i> originais. Inclua nos seus projetos usando <code>#include &lt;more_f.h&gt;</code>.</p>
+                <p class="en">Details of <b>all</b> functions present in the original header files. Include in your projects using <code>#include &lt;more_f.h&gt;</code>.</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Função / Function</th>
+                            <th>Parâmetros / Parameters</th>
+                            <th><span class="pt">Descrição e Retorno</span><span class="en">Description & Return</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="3" class="module-header"><span class="pt">Módulo: math_f.h (Matemática Pura)</span><span class="en">Module: math_f.h (Pure Math)</span></td></tr>
+                        <tr>
+                            <td><code>pot()</code></td>
+                            <td><code>double base, double expo</code></td>
+                            <td><span class="pt"><b>Retorna: double.</b> Calcula a potência suportando expoentes negativos e fracionários via frações manuais.</span><span class="en"><b>Returns: double.</b> Calculates power supporting negative and fractional exponents via manual fractions.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>raiz()</code></td>
+                            <td><code>double radical, double n</code></td>
+                            <td><span class="pt"><b>Retorna: double.</b> Calcula a raiz de <code>n</code> com precisão forçada de 0.000001 iterativamente.</span><span class="en"><b>Returns: double.</b> Calculates root of <code>n</code> with forced 0.000001 precision iteratively.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>prox()</code></td>
+                            <td><code>double x, double y, double z</code></td>
+                            <td><span class="pt"><b>Retorna: double.</b> Identifica quem está matematicamente mais próximo de <code>x</code>: <code>y</code> ou <code>z</code>.</span><span class="en"><b>Returns: double.</b> Identifies who is mathematically closer to <code>x</code>: <code>y</code> or <code>z</code>.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>inteiro()</code></td>
+                            <td><code>double n</code></td>
+                            <td><span class="pt"><b>Retorna: long int.</b> Retorna o valor inteiro de <code>n</code>. Se possuir casas decimais, retorna 0.</span><span class="en"><b>Returns: long int.</b> Returns the integer value of <code>n</code>. If it has decimals, returns 0.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>log_f() / logarit()</code></td>
+                            <td><code>double num, double base</code></td>
+                            <td><span class="pt"><b>Retorna: double / int.</b> Encontra o logaritmo por incrementos de força bruta. Retorna 0 (ou -1) em caso de erro.</span><span class="en"><b>Returns: double / int.</b> Finds logarithm via brute-force increments. Returns 0 (or -1) on error.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>fat()</code></td>
+                            <td><code>int n</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Calcula o fatorial do número inteiro fornecido.</span><span class="en"><b>Returns: int.</b> Calculates the factorial of the provided integer.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>some() / prode()</code></td>
+                            <td><code>int x, int y</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Realiza a soma contínua (<code>some</code>) ou o produto contínuo (<code>prode</code>) dos números no intervalo entre x e y.</span><span class="en"><b>Returns: int.</b> Performs continuous sum (<code>some</code>) or continuous product (<code>prode</code>) of numbers between x and y.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>arr()</code></td>
+                            <td><code>double x</code></td>
+                            <td><span class="pt"><b>Retorna: double.</b> Arredonda um número real separando a parte inteira e a parte fracionária.</span><span class="en"><b>Returns: double.</b> Rounds a real number by separating integer and fractional parts.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>achaInt()</code></td>
+                            <td><code>long int *i, long int *q, double n</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Modifica os ponteiros <code>i</code> e <code>q</code> para encontrar dois inteiros que representem o decimal <code>n</code> em formato de fração.</span><span class="en"><b>Returns: void.</b> Modifies pointers <code>i</code> and <code>q</code> to find two integers representing decimal <code>n</code> as a fraction.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>mod()</code></td>
+                            <td><code>double n</code></td>
+                            <td><span class="pt"><b>Retorna: double.</b> Retorna o valor absoluto (módulo) do número fornecido.</span><span class="en"><b>Returns: double.</b> Returns the absolute (modulus) value of the provided number.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>invi()</code></td>
+                            <td><code>int n</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Inverte a ordem dos dígitos de um número inteiro via recursividade matemática.</span><span class="en"><b>Returns: int.</b> Inverts the digit order of an integer via mathematical recursion.</span></td>
+                        </tr>
+
+                        <tr><td colspan="3" class="module-header"><span class="pt">Módulo: string_f.h (Manipulação de Strings e Bases)</span><span class="en">Module: string_f.h (String and Base Manipulation)</span></td></tr>
+                        <tr>
+                            <td><code>len()</code></td>
+                            <td><code>char s[]</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Calcula manualmente o comprimento de uma string iterando até ao caractere de escape <code>\0</code>.</span><span class="en"><b>Returns: int.</b> Manually calculates string length by iterating to the <code>\0</code> escape character.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>cpy()</code></td>
+                            <td><code>char x[], char *y</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Copia os caracteres do array <code>x</code> para o ponteiro <code>y</code>.</span><span class="en"><b>Returns: void.</b> Copies characters from array <code>x</code> to pointer <code>y</code>.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>igual()</code></td>
+                            <td><code>char x[], char y[]</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Compara ambas as strings. Retorna 1 se forem exatamente iguais, ou 0 em caso de diferença.</span><span class="en"><b>Returns: int.</b> Compares both strings. Returns 1 if exactly equal, or 0 otherwise.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>sorn()</code></td>
+                            <td><code>char s[]</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Verifica se a string possui <i>apenas</i> números ou o caractere de ponto (.).</span><span class="en"><b>Returns: int.</b> Verifies if the string contains <i>only</i> numbers or the dot (.) character.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>sori()</code></td>
+                            <td><code>char *s</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Verifica de forma estrita se a string contém apenas números inteiros maiores que zero.</span><span class="en"><b>Returns: int.</b> Strictly verifies if the string contains only integers greater than zero.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>itoa()</code></td>
+                            <td><code>int i, char *s</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Conversão de Inteiro para String lidando manualmente com as potências de 10.</span><span class="en"><b>Returns: void.</b> Integer to String conversion manually handling powers of 10.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ftoa()</code></td>
+                            <td><code>double f, char *c</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Conversão de Decimal (Double) para String fracionando a parte inteira da decimal.</span><span class="en"><b>Returns: void.</b> Double to String conversion separating integer from decimal part.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>uplw()</code></td>
+                            <td><code>char *s, double k</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Converte a string alterando o ASCII para maiúsculas (k>0) ou minúsculas (k<=0).</span><span class="en"><b>Returns: void.</b> Modifies string ASCII to uppercase (k>0) or lowercase (k<=0).</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>comtodot() / dottocom()</code></td>
+                            <td><code>char *s</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Substitui as vírgulas de uma string por pontos (<code>comtodot</code>) ou vice-versa (<code>dottocom</code>).</span><span class="en"><b>Returns: void.</b> Replaces commas in a string with dots (<code>comtodot</code>) or vice versa.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>find()</code></td>
+                            <td><code>char l, char s[]</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Devolve a posição do caractere <code>l</code> na string, ou um número negativo caso não exista.</span><span class="en"><b>Returns: int.</b> Returns the position of character <code>l</code> in string, or a negative number if missing.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>bin()</code></td>
+                            <td><code>double n</code></td>
+                            <td><span class="pt"><b>Retorna: char*.</b> Converte um número real/inteiro numa string formatada em base binária.</span><span class="en"><b>Returns: char*.</b> Converts a real/integer number to a formatted binary string.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>btoi() / itob()</code></td>
+                            <td><code>int i / int b</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Conversores de base direta: Binário para Inteiro (btoi) ou Inteiro para Binário (itob).</span><span class="en"><b>Returns: int.</b> Direct base converters: Binary to Integer (btoi) or Integer to Binary (itob).</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>invs()</code></td>
+                            <td><code>char *s</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Inverte fisicamente a ordem de todos os caracteres numa string gerindo alocação (calloc).</span><span class="en"><b>Returns: void.</b> Physically inverts character order in a string managing allocation (calloc).</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>hva()</code></td>
+                            <td><code>char *c</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Analisa a string para verificar a presença de caracteres especiais do mapeamento.</span><span class="en"><b>Returns: int.</b> Analyzes the string to verify the presence of mapping special characters.</span></td>
+                        </tr>
+
+                        <tr><td colspan="3" class="module-header"><span class="pt">Módulo: system_f.h (Utilitários de Sistema e I/O)</span><span class="en">Module: system_f.h (System & I/O Utilities)</span></td></tr>
+                        <tr>
+                            <td><code>teste()</code></td>
+                            <td><code>int i</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Imprime "Sem erro por aqui - [i]" para auxiliar na depuração (teste de mesa).</span><span class="en"><b>Returns: void.</b> Prints a debug message to help with manual code tracing.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>sistema()</code></td>
+                            <td><code>Nenhum</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Identifica via diretivas do pré-processador o Sistema Operativo: 1 (Linux), 2 (Windows), 3 (Outros).</span><span class="en"><b>Returns: int.</b> Identifies OS via pre-processor directives: 1 (Linux), 2 (Windows), 3 (Other).</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>fthere()</code></td>
+                            <td><code>char *s</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Verifica de forma silenciosa se um ficheiro de nome <code>s</code> existe no diretório atual.</span><span class="en"><b>Returns: int.</b> Silently verifies if a file named <code>s</code> exists in the current directory.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>limp()</code></td>
+                            <td><code>Nenhum</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Limpa o terminal combinando comandos (<code>system("cls||clear")</code>) para portabilidade.</span><span class="en"><b>Returns: void.</b> Clears the terminal using combined commands for portability.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>trava()</code></td>
+                            <td><code>Nenhum</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Algoritmo de stress. Consome a memória RAM contínua e intencionalmente num loop infinito.</span><span class="en"><b>Returns: void.</b> Stress algorithm. Consumes RAM memory continuously in an infinite loop.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>temp()</code></td>
+                            <td><code>int fuso</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Imprime data, hora e dia da semana exatos a partir da divisão estruturada do Timestamp Unix.</span><span class="en"><b>Returns: void.</b> Prints exact date, time, and weekday parsed from the Unix Timestamp.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>creaty()</code></td>
+                            <td><code>char *mensage, char *file, char *ex</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Cria múltiplas cópias do ficheiro com conteúdos definidos e nomes pseudo-aleatórios usando <code>rand()</code>.</span><span class="en"><b>Returns: void.</b> Creates multiple copies of a file with defined contents and pseudo-random names.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>enter()</code></td>
+                            <td><code>char *finalidade</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Pausa a execução do programa imprimindo um pedido ao utilizador para pressionar "Enter".</span><span class="en"><b>Returns: void.</b> Pauses execution asking the user to press the "Enter" key.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>credits()</code></td>
+                            <td><code>int tempo, char *nome...</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Exibe ecrã de créditos personalizados do programa e suspende o encerramento.</span><span class="en"><b>Returns: void.</b> Displays custom credits screen and suspends program termination.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>vtos()</code></td>
+                            <td><code>char *s</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Converte o tempo armazenado numa string no formato "HH:MM:SS" no total absoluto de segundos.</span><span class="en"><b>Returns: int.</b> Converts time stored in an "HH:MM:SS" string into an absolute seconds total.</span></td>
+                        </tr>
+
+                        <tr><td colspan="3" class="module-header"><span class="pt">Módulo: morse_f.h (Tradução Estruturada)</span><span class="en">Module: morse_f.h (Structured Translation)</span></td></tr>
+                        <tr>
+                            <td><code>atom()</code></td>
+                            <td><code>char a[], char *s</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Recebe array ASCII <code>a</code> e converte-o para representação em Morse na string ponteiro <code>s</code>.</span><span class="en"><b>Returns: void.</b> Takes ASCII array <code>a</code> and converts to Morse representation in pointer <code>s</code>.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>mtoa()</code></td>
+                            <td><code>char m[], char *s</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Descodifica a string em formato Morse <code>m</code> e guarda o texto legível resultante em <code>s</code>.</span><span class="en"><b>Returns: void.</b> Decodes Morse formatted string <code>m</code> and saves readable text in <code>s</code>.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>mora()</code></td>
+                            <td><code>char s[]</code></td>
+                            <td><span class="pt"><b>Retorna: int.</b> Analisa a string iterativamente para verificar se é um padrão válido de Código Morse.</span><span class="en"><b>Returns: int.</b> Analyzes string iteratively to verify if it matches a valid Morse Code pattern.</span></td>
+                        </tr>
+                        
+                        <tr><td colspan="3" class="module-header"><span class="pt">Extra: Funções do CampoMinado.c</span><span class="en">Extra: CampoMinado.c Functions</span></td></tr>
+                        <tr>
+                            <td><code>abrir()</code></td>
+                            <td><code>char** mat, int l, int c...</code></td>
+                            <td><span class="pt"><b>Retorna: void.</b> Aplica o algoritmo de recursividade clássico (Flood Fill) para revelar todas as grelhas sem bombas.</span><span class="en"><b>Returns: void.</b> Applies classic recursion algorithm (Flood Fill) to reveal all bomb-free grid areas.</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2><span class="pt">🌐 Bibliotecas Web (JS)</span><span class="en">🌐 Web Libraries (JS)</span></h2>
+                <p class="pt">Módulos criados para traduzir o núcleo da lógica de C para um ambiente compatível com o navegador.</p>
+                <p class="en">Modules created to translate the core C logic to a browser-compatible environment.</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Função / Function</th>
+                            <th>Parâmetros / Parameters</th>
+                            <th><span class="pt">Descrição</span><span class="en">Description</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>calculaJogadaIA()</code></td>
+                            <td><code>Number palitosRestantes</code></td>
+                            <td><span class="pt">Implementa a lógica condicional matemática imbatível traduzida do Jogo dos 21 Palitos. Retorna int.</span><span class="en">Implements the unbeatable math conditional logic from the 21 Sticks game. Returns int.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>startMinesweeper()</code></td>
+                            <td><code>Nenhum (Lê do DOM)</code></td>
+                            <td><span class="pt">Aloca a grelha em arrays JS (simulando <code>alloc()</code> do C) e distribui bombas pseudo-aleatórias.</span><span class="en">Allocates JS array grids (simulating C's <code>alloc()</code>) and places pseudo-random bombs.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>openCell()</code></td>
+                            <td><code>Number r, Number c</code></td>
+                            <td><span class="pt">Traduz diretamente a função <code>abrir()</code> do C, usando o Call Stack do JS para a recursividade do Flood Fill.</span><span class="en">Translates C's <code>abrir()</code> function, using JS Call Stack for Flood Fill recursion.</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>atomJS() / mtoaJS()</code></td>
+                            <td><code>String input</code></td>
+                            <td><span class="pt">Ferramentas de tradução otimizadas com uso de dicionários (<i>Hash Maps</i>) baseados na <i>Lookup Table</i>.</span><span class="en">Optimized translation tools using Hash Maps based on the original Lookup Table.</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="download" class="tab-content">
+            <div class="card" style="text-align: center;">
+                <h2><span class="pt">Baixar Código Fonte</span><span class="en">Download Source Code</span></h2>
+                <p class="pt">Obtenha os ficheiros originais em C, scripts de instalação nativa e os Makefiles.</p>
+                <p class="en">Get the original C files, native installation scripts, and Makefiles.</p>
+                
+                <a href="https://github.com/jluckmay/c-codes/archive/refs/heads/main.zip" class="download-btn">
+                    📦 <span class="pt">Baixar Arquivo .ZIP</span><span class="en">Download .ZIP File</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="jogar" class="tab-content">
+            <div class="card">
+                <h2>🕹️ <span class="pt">Jogo dos 21 Palitos</span><span class="en">21 Sticks Game</span></h2>
+                <p class="pt">Retire de 1 a 4 palitos por turno. Quem retirar o último, perde!</p>
+                <p class="en">Remove 1 to 4 sticks per turn. Whoever takes the last one loses!</p>
+                
+                <div class="game-area">
+                    <h3><span class="pt">Palitos na mesa:</span><span class="en">Sticks on table:</span> <span id="stick-count">21</span></h3>
+                    <div id="sticks-display">| | | | | | | | | | | | | | | | | | | | |</div>
+                    
+                    <div>
+                        <input type="number" id="stick-input" class="game-input" min="1" max="4" value="1">
+                        <button onclick="if(typeof playSticks === 'function') playSticks(); else alert('Erro JS!');">
+                            <span class="pt">Retirar</span><span class="en">Remove</span>
+                        </button>
+                    </div>
+                    <p id="sticks-msg" style="margin-top: 15px; font-weight: bold;"></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💣 <span class="pt">Campo Minado</span><span class="en">Minesweeper</span></h2>
+                <p class="pt">Recriado via JS com a mesma lógica recursiva (Flood Fill) do programa original em C. <b>Botão esquerdo:</b> Abrir. <b>Botão direito:</b> Bandeira.</p>
+                <p class="en">Recreated via JS with the same recursive logic (Flood Fill) as the original C program. <b>Left click:</b> Open. <b>Right click:</b> Flag.</p>
+                
+                <div class="game-area">
+                    <div class="ms-settings">
+                        <label><span class="pt">Linhas:</span><span class="en">Rows:</span> </label>
+                        <input type="number" id="ms-rows" class="game-input" value="9" min="5" max="20">
+                        
+                        <label><span class="pt">Colunas:</span><span class="en">Cols:</span> </label>
+                        <input type="number" id="ms-cols" class="game-input" value="9" min="5" max="20">
+                        
+                        <label>💣 </label>
+                        <input type="number" id="ms-bombs" class="game-input" value="10" min="1" max="99">
+                        
+                        <button onclick="startMinesweeper()" style="margin-left: 10px;">
+                            <span class="pt">Iniciar Partida</span><span class="en">Start Game</span>
+                        </button>
+                    </div>
+
+                    <h3><span class="pt">Bandeiras:</span><span class="en">Flags:</span> <span id="ms-flag-count">0</span> / <span id="ms-bomb-count">10</span></h3>
+                    <p id="ms-msg" style="font-weight: bold; min-height: 24px; color: var(--accent-color);"></p>
+                    
+                    <div id="ms-board" class="ms-board"></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="morse" class="tab-content">
+            <div class="card">
+                <h2>📻 <span class="pt">Conversor de Código Morse</span><span class="en">Morse Code Converter</span></h2>
+                <p class="pt">Lógica idêntica ao programa <code>ConversorDeCodigoMorse.c</code>, utilizando a mesma base de tradução.</p>
+                <p class="en">Logic identical to the <code>ConversorDeCodigoMorse.c</code> program, using the same translation base.</p>
+                
+                <div class="game-area" style="text-align: left;">
+                    <label for="morse-input-text" style="font-weight: bold;"><span class="pt">Entrada de Texto ou Morse:</span><span class="en">Text or Morse Input:</span></label>
+                    <textarea id="morse-input-text" class="morse-textarea" placeholder="..."></textarea>
+                    
+                    <div class="morse-actions">
+                        <button onclick="handleMorse('encode')">
+                            <span class="pt">Codificar (Texto ➔ Morse)</span><span class="en">Encode (Text ➔ Morse)</span>
+                        </button>
+                        <button onclick="handleMorse('decode')">
+                            <span class="pt">Descodificar (Morse ➔ Texto)</span><span class="en">Decode (Morse ➔ Text)</span>
+                        </button>
+                        <button onclick="document.getElementById('morse-input-text').value = ''; document.getElementById('morse-output-text').value = '';" style="background-color: transparent; border-color: var(--border-color); color: var(--text-color);">
+                            <span class="pt">Limpar</span><span class="en">Clear</span>
+                        </button>
+                    </div>
+
+                    <label for="morse-output-text" style="font-weight: bold;"><span class="pt">Resultado:</span><span class="en">Result:</span></label>
+                    <textarea id="morse-output-text" class="morse-textarea" readonly placeholder="O resultado aparecerá aqui..."></textarea>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/system_f.js"></script>
+    <script src="js/math_f.js"></script>
+    <script src="js/games_f.js"></script>
+</body>
+</html>
