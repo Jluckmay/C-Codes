@@ -15,7 +15,7 @@ void teste(int i) {
 int sistema() {
     int i;
 
-    #ifdef linux || LINUX
+    #if defined(__linux__) || defined(linux) || defined(LINUX)
         i = 1;
     #elif defined WIN32 || win32 || WIN64 || win64
         i = 2;
@@ -130,27 +130,27 @@ int stov(int segundos)
 
     if (h < 10) {
         tempo[0] = '0';
-        itoa(h, &tempo[1]);
+        itoa_f(h, &tempo[1]);
     } else {
-        itoa(h, &tempo[0]);
+        itoa_f(h, &tempo[0]);
     }
 
     tempo[2] = ':';
 
     if (m < 10) {
         tempo[3] = '0';
-        itoa(m, &tempo[4]);
+        itoa_f(m, &tempo[4]);
     } else {
-        itoa(m, &tempo[3]);
+        itoa_f(m, &tempo[3]);
     }
 
     tempo[5] = ':';
 
     if (s < 10) {
         tempo[6] = '0';
-        itoa(s, &tempo[7]);
+        itoa_f(s, &tempo[7]);
     } else {
-        itoa(s, &tempo[6]);
+        itoa_f(s, &tempo[6]);
     }
 
     tempo[8] = '\0';
@@ -236,23 +236,23 @@ void temp(int fuso) {
 
     if (day < 10) {
         data[0] = '0';
-        itoa(day, &data[1]);
+        itoa_f(day, &data[1]);
     } else {
-        itoa(day, &data[0]);
+        itoa_f(day, &data[0]);
     }
 
     data[2] = '/';
 
     if (m < 10) {
         data[3] = '0';
-        itoa(m, &data[4]);
+        itoa_f(m, &data[4]);
     } else {
-        itoa(m, &data[3]);
+        itoa_f(m, &data[3]);
     }
 
     data[5] = '/';
 
-    itoa(a, &data[6]);
+    itoa_f(a, &data[6]);
 
     switch ((time(NULL) / (60 * 60 * 24)) % 7) {
     case 0: cpy("Quinta", dia); break;
@@ -264,18 +264,18 @@ void temp(int fuso) {
     case 6: cpy("Quarta", dia); break;
     }
 
-    if (h < 10) { hora[0] = '0'; itoa(h, &hora[1]); }
-    else itoa(h, hora);
+    if (h < 10) { hora[0] = '0'; itoa_f(h, &hora[1]); }
+    else itoa_f(h, hora);
 
     hora[2] = ':';
 
-    if (min < 10) { hora[3] = '0'; itoa(min, &hora[4]); }
-    else itoa(min, &hora[3]);
+    if (min < 10) { hora[3] = '0'; itoa_f(min, &hora[4]); }
+    else itoa_f(min, &hora[3]);
 
     hora[5] = ':';
 
-    if (seg < 10) { hora[6] = '0'; itoa(seg, &hora[7]); }
-    else itoa(seg, &hora[6]);
+    if (seg < 10) { hora[6] = '0'; itoa_f(seg, &hora[7]); }
+    else itoa_f(seg, &hora[6]);
 
     i = len(dia);
     cpy(dia, &tempo[0]);

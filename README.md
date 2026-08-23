@@ -25,7 +25,7 @@ A biblioteca original foi refatorada e dividida em módulos para melhor desempen
 
 - **`math_f.h`**: Lógica aritmética. Inclui funções como potência (`pot`), raízes com precisão de 0.000001 (`raiz`), logaritmos (`log_f`), fatoriais, arredondamentos e cálculo do dia da semana (`congruencia_zeller`).
 - **`morse_f.h`**: Conversor de Código Morse otimizado. Substitui cadeias massivas de `if/else` por uma *Lookup Table* estática, garantindo traduções rápidas e eficientes de texto para Morse (`atom`) e Morse para texto (`mtoa`).
-- **`string_f.h`**: Manipulação de textos e arrays de caracteres. Implementações próprias de conversão de bases numéricas (`bin`, `itob`, `btoi`), além de conversões numéricas clássicas (`itoa`, `ftoa`).
+- **`string_f.h`**: Manipulação de textos e arrays de caracteres. Implementações próprias de conversão de bases numéricas (`bin`, `itob`, `btoi`), além de conversões numéricas clássicas (`itoa_f`, `ftoa`).
 - **`system_f.h`**: Utilitários do sistema. Inclui conversões entre datas e dias/segundos desde a época Unix (`stod`, `stosec`, `dtos`, `sectos`), diferenças entre datas, dia da semana, manipulação de arquivos e terminal.
 
 ### 📋 Pré-requisitos
@@ -116,7 +116,7 @@ The original library was refactored and divided into modules for better performa
 
 - **`math_f.h`**: Arithmetic logic. Includes functions such as power (`pot`), roots with 0.000001 precision (`raiz`), logarithms (`log_f`), factorials, rounding, and weekday calculation (`congruencia_zeller`).
 - **`morse_f.h`**: Optimized Morse Code converter. Replaces massive `if/else` chains with a static *Lookup Table*, ensuring fast and efficient translations from text to Morse (`atom`) and Morse to text (`mtoa`).
-- **`string_f.h`**: Text and character array manipulation. Custom implementations of numeric base conversions (`bin`, `itob`, `btoi`), as well as classic numeric conversions (`itoa`, `ftoa`).
+- **`string_f.h`**: Text and character array manipulation. Custom implementations of numeric base conversions (`bin`, `itob`, `btoi`), as well as classic numeric conversions (`itoa_f`, `ftoa`).
 - **`system_f.h`**: System utilities. Includes conversions between dates and days/seconds since the Unix epoch (`stod`, `stosec`, `dtos`, `sectos`), date differences, weekday calculation, file handling, and terminal interactions.
 
 ### 📋 Prerequisites

@@ -123,7 +123,7 @@ void atom(char a[], char *s) {
             s[j + 1] = '/';
             s[j + 2] = '\0';
         } else if (k != 0) {
-            itoa(k, &s[len(s)]);
+            itoa_f(k, &s[len(s)]);
         }
 
         j = len(s);

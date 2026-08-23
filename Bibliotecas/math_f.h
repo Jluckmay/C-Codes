@@ -225,7 +225,7 @@ int logarit(int b, int n) {
 }
 
 // Calcula o logaritmo de num na base desejada (padrão 10)
-double log(double num, double base) {
+double log_f(double num, double base) {
     double result = 0, focus = 0.000001; // Precisão de 6 casas decimais
     
     // Primeira verificação: Se a base é igual ao número, o log é sempre 1

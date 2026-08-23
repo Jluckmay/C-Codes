@@ -71,7 +71,7 @@ void uplw(char *s, double k) {
 }
 
 // Converte im inteiro i para uma string s
-void itoa(int i, char *s) {
+void itoa_f(int i, char *s) {
     int j, l, u;
     double k;
     char *a;
@@ -136,12 +136,12 @@ void ftoa(double f, char *c) {
         for (j = 0; !inteiro(e); j++) e = e * 10;
     }
 
-    itoa(k, a);
+    itoa_f(k, a);
 
     if (e != 0) {
         a[i] = '.';
         i++;
-        itoa(e, (a + i));
+        itoa_f(e, (a + i));
     }
 }
 
@@ -196,7 +196,7 @@ int btoi(int i) {
     q = (char *)calloc(j + 1, 1);
     if (q == NULL) return -1;
 
-    itoa(k, q);
+    itoa_f(k, q);
 
     for (i = 0, k = 0, j--; i <= j; i++) {
         w = *(q + i + 1);
@@ -255,7 +255,7 @@ char *bin(double n) {
         for (j = 0; b > 0; j++, b /= 10);
 
         q = (char *)calloc(j + 7, 1);
-        itoa(i, q);
+        itoa_f(i, q);
         q[j] = '.';
         b = j;
 
