@@ -253,7 +253,7 @@ double log(double num, double base) {
     return result;
 }
 
-// Inverte a ordem dos dígitoa de um numero inteiro
+// Inverte a ordem dos dígitos de um numero inteiro
 int invi(int n) {
     int i, j, m, n1;
 
@@ -271,6 +271,24 @@ int invi(int n) {
     for (j = 0; j < i - 1; j++) n *= 10;
 
     return n + invi(m);
+}
+
+// Encontra o dia da semana de uma data qualquer
+int congruencia_zeller(int dia, int mes, int ano)
+{
+    int parte1, parte2;
+
+    if(mes<3)
+    {
+        mes+=12;
+        ano--;
+    }
+
+    parte1 = ano/100;
+    parte2 = ano - parte1*100;
+
+    return (dia + (13 * (mes + 1)) / 5 + parte2 + parte2 / 4 +
+            parte1 / 4 + 5 * parte1) % 7;
 }
 
 #endif

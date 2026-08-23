@@ -6,8 +6,6 @@
 #include <time.h>
 #include "string_f.h"
 
-int time();
-
 // Função q imprime uma mensagem acompanhada de um numero inteiro i, usada para teste de mesa
 void teste(int i) {
     printf("\nSem erro por aqui - %i\n", i);
@@ -52,6 +50,114 @@ void trava() {
     char *q;
 
     for (q = (char *)malloc(1); q != NULL; q = (char *)malloc(1));
+}
+
+//Função que cria copias com nomes aleatorios do arquivo file com a mensagem mensage com a extensão ex
+void creaty(char *mensage, char *file, char *ex) {
+    FILE *f1, *f2;
+    int i, j = 6, k, t = len(ex);
+    char c, s[101];
+
+    f1 = fopen(file, "w");
+    fprintf(f1, "%s", mensage);
+    fclose(f1);
+
+    f1 = fopen(file, "r");
+    srand(time(NULL));
+
+    for (j = t + 1; j < 101; j++) {
+        k = 0;
+        do {
+            do {
+                for (i = 0; i < j; i++) {
+                    do {
+                        s[i] = rand() % 127;
+                    } while (s[i] == '\0');
+                }
+                cpy(ex, &s[i - t]);
+            } while (fthere(s));
+
+            f2 = fopen(s, "w");
+            if (f2 != NULL) {
+                for (c = fgetc(f1); c != EOF; c = fgetc(f1)) {
+                    fputc(c, f2);
+                }
+                fclose(f2);
+            }
+            k++;
+        } while (k < (pot(127, j - t)));
+    }
+    fclose(f1);
+}
+
+// Função que printa uma mensagem de pressione Enter para voltar ao menu/sair do programa
+void enter(char *finalidade) {
+    printf("\n\nPressione \"Enter\" para %s\n", finalidade);
+    getchar();
+    limp();
+}
+
+// Função que printa créditoa ao fim do programa
+void credits(int tempo, char *nome, char *email, char *tipo_programa) {
+    printf("Este %s foi desenvolvido por: %s\n\nGostou do %s? Compartilhe!\nTem algo para melhorar? Me conte!\n\nE-mail: %s\n\nFechando o %s, aguarde...\n", tipo_programa, nome, tipo_programa, email, tipo_programa);
+    // sleep(tempo); -> Note que dependendo do OS requer <unistd.h> ou <windows.h>
+    limp();
+}
+
+// Converte o tempo armazenado na string s para segundos e o retorna
+int vtos(char *s) {
+    int i = 0;
+
+    i += (s[7] - 48);
+    i += (s[6] - 48) * 10;
+    i += (s[4] - 48) * 60;
+    i += (s[3] - 48) * 600;
+    i += (s[1] - 48) * 3600;
+    i += (s[0] - 48) * 36000;
+
+    return i;
+}
+
+// Converte segundos para string
+int stov(int segundos)
+{
+    int h, m, s;
+    char tempo[9];
+
+    h = segundos / 3600;
+    m = (segundos % 3600) / 60;
+    s = segundos % 60;
+
+    if (h < 10) {
+        tempo[0] = '0';
+        itoa(h, &tempo[1]);
+    } else {
+        itoa(h, &tempo[0]);
+    }
+
+    tempo[2] = ':';
+
+    if (m < 10) {
+        tempo[3] = '0';
+        itoa(m, &tempo[4]);
+    } else {
+        itoa(m, &tempo[3]);
+    }
+
+    tempo[5] = ':';
+
+    if (s < 10) {
+        tempo[6] = '0';
+        itoa(s, &tempo[7]);
+    } else {
+        itoa(s, &tempo[6]);
+    }
+
+    tempo[8] = '\0';
+
+    printf("%s", tempo);
+
+    return 0;
 }
 
 //Calcula e printa o dia e horário atuais, utilizando o fuso horário.
@@ -182,70 +288,108 @@ void temp(int fuso) {
     puts(tempo);
 }
 
-//Função que cria copias com nomes aleatorios do arquivo file com a mensagem mensage com a extensão ex
-void creaty(char *mensage, char *file, char *ex) {
-    FILE *f1, *f2;
-    int i, j = 6, k, t = len(ex);
-    char c, s[101];
 
-    f1 = fopen(file, "w");
-    fprintf(f1, "%s", mensage);
-    fclose(f1);
+// Converte uma data para dias, representando a quantidade de dias passados desde 01/01/1970 até ela
+int stod(char* data)
+{
+    int dia, mes, ano, total;
 
-    f1 = fopen(file, "r");
-    srand(time(NULL));
+    // Tabela com a quantidade de dias antes do início de cada mês, considerando anos não bissextos
+    static const int dias_antes_mes[] = {
+        0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334
+    };
 
-    for (j = t + 1; j < 101; j++) {
-        k = 0;
-        do {
-            do {
-                for (i = 0; i < j; i++) {
-                    do {
-                        s[i] = rand() % 127;
-                    } while (s[i] == '\0');
-                }
-                cpy(ex, &s[i - t]);
-            } while (fthere(s));
+    // Converção para inteiros
+    dia = (data[0] - 48) * 10 + (data[1] - 48);
+    mes = (data[3] - 48) * 10 + (data[4] - 48);
+    ano = (data[6] - 48) * 1000 + (data[7] - 48) * 100 + (data[8] - 48) * 10 + (data[9] - 48);
 
-            f2 = fopen(s, "w");
-            if (f2 != NULL) {
-                for (c = fgetc(f1); c != EOF; c = fgetc(f1)) {
-                    fputc(c, f2);
-                }
-                fclose(f2);
-            }
-            k++;
-        } while (k < (pot(127, j - t)));
-    }
-    fclose(f1);
+    // Cálculo da diferença em dias
+    total = 365 * (ano - 1) + (ano - 1) / 4 - (ano - 1) / 100 +
+             (ano - 1) / 400 + dias_antes_mes[mes-1] + dia;
+
+    // Verificação de ano bissexto
+    if (mes > 2 && (ano % 4 == 0 && (ano % 100 != 0 || ano % 400 == 0))) total++;
+
+    return total - 719163;
 }
 
-// Função que printa uma mensagem de pressione Enter para voltar ao menu/sair do programa
-void enter(char *finalidade) {
-    printf("\n\nPressione \"Enter\" para %s\n", finalidade);
-    getchar();
-    limp();
+// Converte uma data para segundos, representando a quantidade de segundos passados desde 01/01/1970 até ela
+int stosec(char* data)
+{
+    return stod(data) * 24 * 3600;
 }
 
-// Função que printa créditoa ao fim do programa
-void credits(int tempo, char *nome, char *email, char *tipo_programa) {
-    printf("Este %s foi desenvolvido por: %s\n\nGostou do %s? Compartilhe!\nTem algo para melhorar? Me conte!\n\nE-mail: %s\n\nFechando o %s, aguarde...\n", tipo_programa, nome, tipo_programa, email, tipo_programa);
-    // sleep(tempo); -> Note que dependendo do OS requer <unistd.h> ou <windows.h>
-    limp();
+// Converte diferença de dias desde 01/01/1970 para data
+char* dtos(int dias)
+{
+    static char data[11];
+    int era, dia_era, ano_era, dia_ano, mes_calculo;
+    int dia, mes, ano;
+
+    dias += 719468;
+    era = (dias >= 0 ? dias : dias - 146096) / 146097;
+    dia_era = dias - era * 146097;
+    ano_era = (dia_era - dia_era / 1460 + dia_era / 36524 - dia_era / 146096) / 365;
+    ano = ano_era + era * 400;
+    dia_ano = dia_era - (365 * ano_era + ano_era / 4 - ano_era / 100);
+    mes_calculo = (5 * dia_ano + 2) / 153;
+    dia = dia_ano - (153 * mes_calculo + 2) / 5 + 1;
+    mes = mes_calculo + (mes_calculo < 10 ? 3 : -9);
+    ano += mes <= 2;
+
+    data[0] = (char)('0' + dia / 10);
+    data[1] = (char)('0' + dia % 10);
+    data[2] = '/';
+    data[3] = (char)('0' + mes / 10);
+    data[4] = (char)('0' + mes % 10);
+    data[5] = '/';
+    data[6] = (char)('0' + (ano / 1000) % 10);
+    data[7] = (char)('0' + (ano / 100) % 10);
+    data[8] = (char)('0' + (ano / 10) % 10);
+    data[9] = (char)('0' + ano % 10);
+    data[10] = '\0';
+
+    return data;
 }
 
-//Converte o tempo armazenado na string s para segundos e o retorna
-int vtos(char *s) {
-    int i = 0;
+// Converte a diferença em segundos desde 01/01/1970 em uma data
+char* sectos(int segundos)
+{
+    int dias = segundos / 86400;
 
-    i += (s[7] - 48);
-    i += (s[6] - 48) * 10;
-    i += (s[4] - 48) * 60;
-    i += (s[3] - 48) * 600;
-    i += (s[1] - 48) * 3600;
-    i += (s[0] - 48) * 36000;
+    if (segundos < 0 && segundos % 86400 != 0) dias--;
 
-    return i;
+    return dtos(dias);
+}
+
+// Calcula a diferença em dias entre duas datas fornecidas no formato "DD/MM/AAAA". Retorno negativo indica que a primeira data é posterior à segunda.
+int diff_datas(char *data1, char *data2) {
+
+    int total1, total2, diferenca;
+
+    // Cálculo do total de dias desde o início da era (01/01/0001) até cada data, considerando anos bissextos
+    total1 = stod(data1);
+    total2 = stod(data2);
+
+    // Cálculo da diferença absoluta em dias entre as duas datas
+    diferenca = total2 - total1;
+
+    return diferenca;
+}
+
+// Indica o dia da semana de uma data dado a data atual. Datas no formato "DD/MM/AAAA" e dia da semana de 0 a 6
+int dia_semana(char *data, char* hoje, int dia_sem_hoje)
+{
+    // 0 - Sábado | 1 - Domingo | 2 - Segunda | 3 - Terça | 4 - Quarta | 5 - Quinta | 6 - Sexta
+    return (((diff_datas(hoje, data) + dia_sem_hoje) % 7) + 7) % 7;
+}
+
+// Indica o dia da semana de qualquer data
+int semana_juliana(char *data)
+{
+    // 0 - Sábado | 1 - Domingo | 2 - Segunda | 3 - Terça | 4 - Quarta | 5 - Quinta | 6 - Sexta
+    return dia_semana(data, "01/01/1970", 5); // 01/01/1970 foi uma quinta-feira
 }
 
 #endif

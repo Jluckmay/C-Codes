@@ -35,6 +35,10 @@
         body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; transition: 0.3s; }
         body.lang-en .pt { display: none !important; }
         body.lang-pt .en { display: none !important; }
+        .skip-link { position: absolute; left: 10px; top: -60px; z-index: 1000; background: var(--accent-color); color: #fff; padding: 10px 15px; border-radius: 0 0 5px 5px; }
+        .skip-link:focus { top: 0; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+        button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent-color); outline-offset: 3px; }
 
         header { background-color: var(--bg-card); padding: 20px; text-align: center; border-bottom: 3px solid var(--accent-color); }
         header h1 { margin: 0 0 10px 0; font-size: 2.5em; }
@@ -108,9 +112,13 @@
         }
         footer p { margin: 5px 0; font-size: 0.9em; }
         footer .copyright { font-weight: bold; color: var(--accent-color); }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition: none !important; animation: none !important; }
+        }
     </style>
 </head>
-<body class="lang-pt">
+<body>
+    <a class="skip-link" href="#main-content"><span class="pt">Pular para o conteúdo</span><span class="en">Skip to content</span></a>
 
     <header>
         <h1>C-Codes</h1>
@@ -119,22 +127,24 @@
             <span class="en">Developed by João Lucas Mayrinck</span>
         </p>
         
-        <div class="controls">
-            <button onclick="toggleTheme()" id="theme-btn">☀️ Light Mode</button>
-            <button onclick="toggleLang()" id="lang-btn">🇺🇸 English</button>
+        <div class="controls" aria-label="Preferências da página">
+            <button type="button" onclick="toggleTheme()" id="theme-btn" aria-pressed="false">☀️ Light Mode</button>
+            <button type="button" onclick="toggleLang()" id="lang-btn" aria-pressed="false">🇺🇸 English</button>
         </div>
 
-        <nav>
-            <button class="tab-btn active" onclick="showTab('inicio')"><span class="pt">Início</span><span class="en">Home</span></button>
-            <button class="tab-btn" onclick="showTab('docs')"><span class="pt">Documentação</span><span class="en">Docs</span></button>
-            <button class="tab-btn" onclick="showTab('download')">Download</button>
-            <button class="tab-btn" onclick="showTab('jogar')"><span class="pt">Jogar Online</span><span class="en">Play Online</span></button>
-            <button class="tab-btn" onclick="showTab('morse')"><span class="pt">Conversor Morse</span><span class="en">Morse Converter</span></button>
+        <nav aria-label="Navegação principal">
+            <div role="tablist" aria-label="Seções da página">
+                <button type="button" id="tab-inicio" role="tab" aria-selected="true" aria-controls="inicio" class="tab-btn active" onclick="showTab('inicio', this)"><span class="pt">Início</span><span class="en">Home</span></button>
+                <button type="button" id="tab-docs" role="tab" aria-selected="false" aria-controls="docs" tabindex="-1" class="tab-btn" onclick="showTab('docs', this)"><span class="pt">Documentação</span><span class="en">Docs</span></button>
+                <button type="button" id="tab-download" role="tab" aria-selected="false" aria-controls="download" tabindex="-1" class="tab-btn" onclick="showTab('download', this)">Download</button>
+                <button type="button" id="tab-jogar" role="tab" aria-selected="false" aria-controls="jogar" tabindex="-1" class="tab-btn" onclick="showTab('jogar', this)"><span class="pt">Jogar Online</span><span class="en">Play Online</span></button>
+                <button type="button" id="tab-morse" role="tab" aria-selected="false" aria-controls="morse" tabindex="-1" class="tab-btn" onclick="showTab('morse', this)"><span class="pt">Conversor Morse</span><span class="en">Morse Converter</span></button>
+            </div>
         </nav>
     </header>
 
-    <main>
-        <section id="inicio" class="tab-content active">
+    <main id="main-content" tabindex="-1">
+        <section id="inicio" role="tabpanel" aria-labelledby="tab-inicio" class="tab-content active">
             <div class="card">
                 <h2><span class="pt">Sobre o Projeto</span><span class="en">About the Project</span></h2>
                 <p class="pt">Uma coleção de ferramentas e jogos desenvolvidos originalmente em C, focados em lógica pura e algoritmos manuais de alta precisão. A ideia central da biblioteca é "reinventar a roda" (no bom sentido acadêmico), implementando cálculos na "força bruta" e lógica matemática pura, em vez de depender de bibliotecas padrão como <code>&lt;math.h&gt;</code> e <code>&lt;string.h&gt;</code>.</p>
@@ -208,7 +218,7 @@
             </div>
         </section>
 
-        <section id="docs" class="tab-content">
+        <section id="docs" role="tabpanel" aria-labelledby="tab-docs" class="tab-content" hidden>
             
             <div class="card">
                 <h2><span class="pt">📚 Bibliotecas Nativas (C)</span><span class="en">📚 Native Libraries (C)</span></h2>
@@ -216,6 +226,7 @@
                 <p class="en">Details of <b>all</b> functions present in the original header files. Include in your projects using <code>#include &lt;more_f.h&gt;</code>.</p>
                 
                 <table>
+                    <caption class="sr-only"><span class="pt">Funções das bibliotecas C</span><span class="en">C library functions</span></caption>
                     <thead>
                         <tr>
                             <th>Função / Function</th>
@@ -438,6 +449,7 @@
                 <p class="en">Modules created to translate the core C logic to a browser-compatible environment.</p>
                 
                 <table>
+                    <caption class="sr-only"><span class="pt">Funções das bibliotecas web</span><span class="en">Web library functions</span></caption>
                     <thead>
                         <tr>
                             <th>Função / Function</th>
@@ -471,7 +483,7 @@
             </div>
         </section>
 
-        <section id="download" class="tab-content">
+        <section id="download" role="tabpanel" aria-labelledby="tab-download" class="tab-content" hidden>
             <div class="card" style="text-align: center;">
                 <h2><span class="pt">Baixar Código Fonte</span><span class="en">Download Source Code</span></h2>
                 <p class="pt">Obtenha os ficheiros originais em C, scripts de instalação nativa e os Makefiles.</p>
@@ -483,7 +495,7 @@
             </div>
         </section>
 
-        <section id="jogar" class="tab-content">
+        <section id="jogar" role="tabpanel" aria-labelledby="tab-jogar" class="tab-content" hidden>
             <div class="card">
                 <h2>🕹️ <span class="pt">Jogo dos 21 Palitos</span><span class="en">21 Sticks Game</span></h2>
                 <p class="pt">Retire de 1 a 4 palitos por turno. Quem retirar o último, perde!</p>
@@ -491,15 +503,16 @@
                 
                 <div class="game-area">
                     <h3><span class="pt">Palitos na mesa:</span><span class="en">Sticks on table:</span> <span id="stick-count">21</span></h3>
-                    <div id="sticks-display">| | | | | | | | | | | | | | | | | | | | |</div>
+                    <div id="sticks-display" role="img" aria-label="21 palitos restantes">| | | | | | | | | | | | | | | | | | | | |</div>
                     
                     <div>
+                        <label for="stick-input" class="sr-only"><span class="pt">Quantidade de palitos</span><span class="en">Number of sticks</span></label>
                         <input type="number" id="stick-input" class="game-input" min="1" max="4" value="1">
                         <button onclick="if(typeof playSticks === 'function') playSticks(); else alert('Erro JS!');">
                             <span class="pt">Retirar</span><span class="en">Remove</span>
                         </button>
                     </div>
-                    <p id="sticks-msg" style="margin-top: 15px; font-weight: bold;"></p>
+                    <p id="sticks-msg" role="status" aria-live="polite" style="margin-top: 15px; font-weight: bold;"></p>
                 </div>
             </div>
 
@@ -510,13 +523,13 @@
                 
                 <div class="game-area">
                     <div class="ms-settings">
-                        <label><span class="pt">Linhas:</span><span class="en">Rows:</span> </label>
+                        <label for="ms-rows"><span class="pt">Linhas:</span><span class="en">Rows:</span> </label>
                         <input type="number" id="ms-rows" class="game-input" value="9" min="5" max="20">
                         
-                        <label><span class="pt">Colunas:</span><span class="en">Cols:</span> </label>
+                        <label for="ms-cols"><span class="pt">Colunas:</span><span class="en">Cols:</span> </label>
                         <input type="number" id="ms-cols" class="game-input" value="9" min="5" max="20">
                         
-                        <label>💣 </label>
+                        <label for="ms-bombs"><span aria-hidden="true">💣</span><span class="sr-only"><span class="pt">Bombas</span><span class="en">Bombs</span></span></label>
                         <input type="number" id="ms-bombs" class="game-input" value="10" min="1" max="99">
                         
                         <button onclick="startMinesweeper()" style="margin-left: 10px;">
@@ -525,14 +538,14 @@
                     </div>
 
                     <h3><span class="pt">Bandeiras:</span><span class="en">Flags:</span> <span id="ms-flag-count">0</span> / <span id="ms-bomb-count">10</span></h3>
-                    <p id="ms-msg" style="font-weight: bold; min-height: 24px; color: var(--accent-color);"></p>
+                    <p id="ms-msg" role="status" aria-live="polite" style="font-weight: bold; min-height: 24px; color: var(--accent-color);"></p>
                     
-                    <div id="ms-board" class="ms-board"></div>
+                    <div id="ms-board" class="ms-board" role="grid" aria-label="Campo minado"></div>
                 </div>
             </div>
         </section>
         
-        <section id="morse" class="tab-content">
+        <section id="morse" role="tabpanel" aria-labelledby="tab-morse" class="tab-content" hidden>
             <div class="card">
                 <h2>📻 <span class="pt">Conversor de Código Morse</span><span class="en">Morse Code Converter</span></h2>
                 <p class="pt">Lógica idêntica ao programa <code>ConversorDeCodigoMorse.c</code>, utilizando a mesma base de tradução.</p>
@@ -555,7 +568,7 @@
                     </div>
 
                     <label for="morse-output-text" style="font-weight: bold;"><span class="pt">Resultado:</span><span class="en">Result:</span></label>
-                    <textarea id="morse-output-text" class="morse-textarea" readonly placeholder="O resultado aparecerá aqui..."></textarea>
+                    <textarea id="morse-output-text" class="morse-textarea" readonly aria-live="polite" placeholder="O resultado aparecerá aqui..."></textarea>
                 </div>
             </div>
         </section>

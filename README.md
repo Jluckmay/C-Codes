@@ -16,16 +16,17 @@ Explore a [página oficial do projeto no GitHub Pages](https://jluckmay.github.i
 - Consultar a documentação completa das funções e bibliotecas.
 - **Jogar no navegador:** Os jogos (como o Jogo dos 21 Palitos) foram reescritos em JavaScript para que você possa testar a lógica da IA diretamente pela web, sem precisar compilar nada.
 - Baixar os arquivos do projeto.
-- Alternar facilmente entre os temas Claro/Escuro e idiomas (Português/Inglês).
+- Usar automaticamente o tema Claro/Escuro e o idioma (Português/Inglês) definidos no sistema ou navegador, com alternância manual disponível.
+- Navegar com teclado ou leitor de tela por abas, formulários, jogos e resultados dinâmicos.
 
 ### 🚀 Funcionalidades
 
 A biblioteca original foi refatorada e dividida em módulos para melhor desempenho e organização:
 
-- **`math_f.h`**: Lógica aritmética. Inclui funções como potência (`pot`), raízes com precisão de 0.000001 (`raiz`), logaritmos (`log_f`), fatoriais e arredondamentos.
+- **`math_f.h`**: Lógica aritmética. Inclui funções como potência (`pot`), raízes com precisão de 0.000001 (`raiz`), logaritmos (`log_f`), fatoriais, arredondamentos e cálculo do dia da semana (`congruencia_zeller`).
 - **`morse_f.h`**: Conversor de Código Morse otimizado. Substitui cadeias massivas de `if/else` por uma *Lookup Table* estática, garantindo traduções rápidas e eficientes de texto para Morse (`atom`) e Morse para texto (`mtoa`).
 - **`string_f.h`**: Manipulação de textos e arrays de caracteres. Implementações próprias de conversão de bases numéricas (`bin`, `itob`, `btoi`), além de conversões numéricas clássicas (`itoa`, `ftoa`).
-- **`system_f.h`**: Utilitários do sistema. Funções para lidar com manipulação de arquivos, datas reconstruídas a partir do *Unix Timestamp* (`temp`), limpeza de tela cross-platform e interações no terminal.
+- **`system_f.h`**: Utilitários do sistema. Inclui conversões entre datas e dias/segundos desde a época Unix (`stod`, `stosec`, `dtos`, `sectos`), diferenças entre datas, dia da semana, manipulação de arquivos e terminal.
 
 ### 📋 Pré-requisitos
 
@@ -106,16 +107,17 @@ Explore the [official project page on GitHub Pages](https://jluckmay.github.io/C
 - Check out the full documentation of functions and libraries.
 - **Play in your browser:** The games (like the 21 Sticks Game) have been rewritten in JavaScript so you can test the AI logic directly online, without needing to compile anything.
 - Download project files.
-- Easily toggle between Light/Dark themes and languages (Portuguese/English).
+- Automatically use the system or browser Light/Dark theme and language (Portuguese/English), with manual toggles available.
+- Navigate tabs, forms, games, and dynamic results using a keyboard or screen reader.
 
 ### 🚀 Features
 
 The original library was refactored and divided into modules for better performance and organization:
 
-- **`math_f.h`**: Arithmetic logic. Includes functions such as power (`pot`), roots with 0.000001 precision (`raiz`), logarithms (`log_f`), factorials, and rounding.
+- **`math_f.h`**: Arithmetic logic. Includes functions such as power (`pot`), roots with 0.000001 precision (`raiz`), logarithms (`log_f`), factorials, rounding, and weekday calculation (`congruencia_zeller`).
 - **`morse_f.h`**: Optimized Morse Code converter. Replaces massive `if/else` chains with a static *Lookup Table*, ensuring fast and efficient translations from text to Morse (`atom`) and Morse to text (`mtoa`).
 - **`string_f.h`**: Text and character array manipulation. Custom implementations of numeric base conversions (`bin`, `itob`, `btoi`), as well as classic numeric conversions (`itoa`, `ftoa`).
-- **`system_f.h`**: System utilities. Functions for handling file manipulation, dates reconstructed from *Unix Timestamps* (`temp`), cross-platform screen clearing, and terminal interactions.
+- **`system_f.h`**: System utilities. Includes conversions between dates and days/seconds since the Unix epoch (`stod`, `stosec`, `dtos`, `sectos`), date differences, weekday calculation, file handling, and terminal interactions.
 
 ### 📋 Prerequisites
 
